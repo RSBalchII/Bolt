@@ -9,7 +9,7 @@
  * 5. Tag limiting verification (Standard 121)
  * 6. Temporal ordering
  * 
- * Standard 115 Compliant: GitHub Repository Ingestion
+ * Standard 012 Compliant: GitHub Repository Ingestion
  * 
  * NOTE: This test uses simulated data to verify database operations.
  * For live GitHub repository testing, see GITHUB_INGESTION_TESTING.md

@@ -130,7 +130,7 @@ export class Database {
           // 1. Search serialization (one search at a time)
           // 2. Memory pressure detection (downgrade max-recall if heap >3.2GB)
           // 3. Forced GC after ingestion and search completion
-          relaxedDurability: true, // Skip fsync during ingestion (Standard 059)
+          relaxedDurability: true, // Skip fsync during ingestion (Standard 011)
           settings: {
             // Reduce PGlite WASM buffer cache from default 1GB
             'shared_buffers': '256MB',
@@ -437,7 +437,7 @@ export class Database {
       throw e;
     }
 
-    // Create GitHub Repos Table (Standard 115: GitHub Repository Ingestion)
+    // Create GitHub Repos Table (Standard 012: GitHub Repository Ingestion)
     try {
       await this.run(`
         CREATE TABLE IF NOT EXISTS github_repos (

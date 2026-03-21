@@ -1,7 +1,7 @@
 import { Application, Request, Response } from 'express';
 
 export function setupGitRoutes(app: Application) {
-  // GitHub Repository Ingestion Endpoints (Standard 115)
+  // GitHub Repository Ingestion Endpoints (Standard 012)
   // POST /v1/github/repos - Register new repo and trigger initial ingestion
   app.post('/v1/github/repos', async (req: Request, res: Response) => {
     try {

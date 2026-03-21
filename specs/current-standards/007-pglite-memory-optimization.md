@@ -22,7 +22,7 @@ initialization. This was too late — the WASM allocator had already reserved th
 
 Pass memory settings directly to the `PGlite` constructor so the WASM allocator honors them
 from the start. Also enable `relaxedDurability` to skip unnecessary `fsync` calls during
-ingestion (see Standard 059 §11).
+ingestion (see Standard 011 §11).
 
 ---
 
@@ -32,7 +32,7 @@ ingestion (see Standard 059 §11).
 
 ```typescript
 this.dbInstance = await new PGlite(dbPath, {
-  relaxedDurability: true,  // Skip fsync during ingestion (Standard 059)
+  relaxedDurability: true,  // Skip fsync during ingestion (Standard 011)
   settings: {
     'shared_buffers':                 '256MB',  // Down from default ~1GB
     'effective_cache_size':           '512MB',  // Planner estimate cap
@@ -92,7 +92,7 @@ speedup during large file ingestion is significant (~10-50x, per Standard 119).
 ## 7. Related Standards
 
 - **Standard 051** — Ephemeral Index (database is disposable)
-- **Standard 059** — Reliable Ingestion (§11 adds `relaxedDurability`)
+- **Standard 011** — Reliable Ingestion (§11 adds `relaxedDurability`)
 - **Standard 095** — Database Reset on Startup
 - **Standard 119** — PGlite-First Architecture
 

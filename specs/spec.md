@@ -482,28 +482,31 @@ anchor-engine-node/
 
 ## Active Standards
 
-### Core Standards (v4.1.2)
+### Current Standards (001-013)
 
-| # | Name | File | Description | Status |
-|---|------|------|-------------|--------|
-| **086** | Dual-Strategy Search | specs/standards/STANDARD_086_*.md | Standard + Max-Recall modes, SimHash dedup | ✅ v2.0 |
-| **113** | Automatic Max-Recall | specs/standards/STANDARD_113_*.md | Auto-trigger at >16k tokens | ✅ v1.0 |
-| **116** | Phoenix Protocol | specs/standards/STANDARD_116_*.md | Backup/Restore with filesystem rebuild | ✅ v1.0 |
-| **120** | System Output Filtering | specs/standards/STANDARD_120_*.md | Prevents self-contamination via sanitization/blacklists | ✅ v1.0 |
+These standards define the active production architecture. Located in `specs/current-standards/`:
 
-### Legacy Standards (Still Valid)
+| # | Name | Description | Status |
+|---|------|-------------|--------|
+| **001** | Memory-Safe File Ingestion | File size limits, molecule count limits, directory preservation | ✅ Active |
+| **002** | Reproducible Benchmarking | Standardized benchmarking methodology | ✅ Active |
+| **003** | MCP Tool Interface | Model Context Protocol integration | ✅ Active |
+| **004** | Streaming Search | Memory-efficient result delivery via SSE | ✅ Active |
+| **005** | Adaptive Concurrency Control | Memory-aware processing (sequential/adaptive/parallel) | ✅ Active |
+| **006** | Mobile Search Optimization | Memory-constrained retrieval for mobile/embedded | ✅ Active |
+| **007** | PGlite Memory Optimization | Database-level memory management | ✅ Active |
+| **008** | Radial Distillation | Lossless corpus compression via deduplication | 🚧 Draft |
+| **009** | Illuminate BFS Traversal | Graph traversal from seed concepts | ✅ Active |
+| **010** | Radial Distillation v2 | Enhanced distillation with YAML/JSON output | ✅ Active |
+| **011** | Reliable Ingestion | Ghost Data Protocol (supersedes Standard 059) | ✅ Active |
+| **012** | GitHub Repository Ingestion | One-click repo ingestion (supersedes Standard 115) | ✅ Active |
+| **013** | API Versioning Strategy | URL-based versioning, deprecation process (supersedes Standard 132) | ✅ Active |
 
-| # | Name | Description |
-|---|------|-------------|
-| **110** | Ephemeral Index | Disposable database pattern |
-| **109** | Batched Ingestion | Large file handling (>50MB) |
-| **104** | Universal Semantic Search | Unified search architecture |
-| **094** | Smart Search Protocol | Fuzzy fallback (deprecated but referenced) |
-| **088** | Server Startup Sequence | ECONNREFUSED fix |
-| **065** | Graph Associative Retrieval | Tag-Walker protocol |
-| **059** | Reliable Ingestion | Ghost Data Protocol |
+### Archive Standards
 
-See `specs/standards/` for complete standards index.
+Historical standards (059-136+) have been renumbered into the 001-013 sequence or deprecated.
+
+**See:** `specs/archive-standards/README.md` for complete archive index with old→new number mapping.
 
 ---
 

@@ -1,5 +1,5 @@
 /**
- * GitHub Repository Ingestion Service (Standard 115)
+ * GitHub Repository Ingestion Service (Standard 012)
  *
  * Downloads GitHub repository tarballs, extracts source files,
  * and ingests them into the Anchor knowledge graph.
@@ -38,7 +38,7 @@ interface SyncResult {
   duration_ms: number;
 }
 
-// File exclusion patterns (Standard 115, Section 3.3)
+// File exclusion patterns (Standard 012, Section 3.3)
 const EXCLUDE_PATTERNS = [
   'node_modules/',
   '.git/',
@@ -422,7 +422,7 @@ export class GitHubIngestService {
       const files = await this.walkDirectory(extractDir);
       console.log(`[GitHub] Found ${files.length} source files`);
 
-      // Quarantine old atoms from this repo (Standard 115, Section 4.5)
+      // Quarantine old atoms from this repo (Standard 012, Section 4.5)
       await this.quarantineOldAtoms(repoId);
 
       // Ingest each file

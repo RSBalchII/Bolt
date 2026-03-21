@@ -1,6 +1,6 @@
 # GitHub Repository Ingestion Testing Guide
 
-**Standard 115:** GitHub Repository Ingestion  
+**Standard 012:** GitHub Repository Ingestion  
 **Version:** 1.0.0  
 **Last Updated:** March 2, 2026
 
@@ -227,9 +227,9 @@ For testing, use small, stable repositories:
 
 ## Related Standards
 
-- **Standard 115:** GitHub Repository Ingestion
+- **Standard 012:** GitHub Repository Ingestion
 - **Standard 121:** Tag Limiting for Output Quality
-- **Standard 059:** Reliable Ingestion
+- **Standard 011:** Reliable Ingestion
 
 ---
 
@@ -237,5 +237,5 @@ For testing, use small, stable repositories:
 
 For issues or questions:
 1. Check server logs (`logs/` directory)
-2. Review Standard 115 specification
-3. Consult `specs/standards/115-github-repository-ingestion.md`
+2. Review Standard 012 specification
+3. Consult `specs/current-standards/012-github-repository-ingestion.md`
