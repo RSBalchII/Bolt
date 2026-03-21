@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Anchor CLI - JavaScript version (no compilation needed)
- * 
+ *
  * Run directly with: node cli/index.js
  */
 
@@ -15,19 +15,22 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, '..');
 
 // Load settings
-let settings = {
-  server: { port: 3161, api_key: '' },
-  watcher: { extra_paths: [] }
-};
-
-try {
-  const settingsPath = join(projectRoot, 'user_settings.json');
-  if (existsSync(settingsPath)) {
-    settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
+function loadSettings() {
+  try {
+    const settingsPath = join(projectRoot, 'user_settings.json');
+    if (existsSync(settingsPath)) {
+      return JSON.parse(readFileSync(settingsPath, 'utf8'));
+    }
+  } catch (error) {
+    // Use defaults
   }
-} catch (error) {
-  // Use defaults
+  return {
+    server: { port: 3161, api_key: '' },
+    watcher: { extra_paths: [] }
+  };
 }
+
+let settings = loadSettings();
 
 const API_URL = `http://localhost:${settings.server.port || 3161}`;
 const API_KEY = settings.server.api_key || '';
@@ -36,7 +39,7 @@ const API_KEY = settings.server.api_key || '';
 async function callAPI(endpoint, method = 'GET', body) {
   const url = `${API_URL}${endpoint}`;
   const headers = { 'Content-Type': 'application/json' };
-  
+
   if (API_KEY) {
     headers['Authorization'] = `Bearer ${API_KEY}`;
   }
@@ -60,7 +63,7 @@ const program = new Command();
 
 program
   .name('anchor')
-  .description('Bolt Memory CLI')
+  .description('Anchor Engine CLI - Persistent memory for AI agents')
   .version('4.9.0');
 
 // STATUS command
@@ -69,7 +72,7 @@ program
   .description('Show system status')
   .action(async () => {
     try {
-      console.log('⚓ Bolt Memory Status');
+      console.log('⚓ Anchor Engine Status');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
       const health = await callAPI('/health');
@@ -78,10 +81,14 @@ program
       const stats = await callAPI('/v1/stats');
       console.log(`Database: ${formatNumber(stats.atoms || 0)} atoms, ${formatNumber(stats.sources || 0)} sources`);
 
-      const watchdog = await callAPI('/v1/watchdog/status');
-      if (watchdog.isRunning) {
-        console.log(`Watchdog: ✅ Active (${watchdog.watchedPaths?.length || 0} paths)`);
-      } else {
+      try {
+        const watchdog = await callAPI('/v1/watchdog/status');
+        if (watchdog.isRunning) {
+          console.log(`Watchdog: ✅ Active (${watchdog.watchedPaths?.length || 0} paths)`);
+        } else {
+          console.log('Watchdog: ❌ Inactive');
+        }
+      } catch {
         console.log('Watchdog: ❌ Inactive');
       }
 
@@ -116,8 +123,11 @@ program
 
       results.results.forEach((r, i) => {
         console.log(`\n[${i + 1}] Score: ${r.score?.toFixed(2) || 'N/A'}`);
-        const content = r.content || '';
-        console.log(`    "${content.substring(0, 200)}..."`);
+        const content = r.content || r.lineContent || '';
+        console.log(`    "${content.substring(0, 200)}${content.length > 200 ? '...' : ''}"`);
+        if (r.source) {
+          console.log(`    Source: ${r.source}`);
+        }
       });
 
       if (options.debug && results.debug) {
@@ -129,22 +139,33 @@ program
     }
   });
 
-// WATCH commands
-program
-  .command('watch add <path>')
-  .description('Add watched path')
+// WATCH command (parent)
+const watchCmd = program
+  .command('watch')
+  .description('Manage watched paths');
+
+watchCmd
+  .command('add <path>')
+  .description('Add a path to watch')
   .action(async (path) => {
     try {
       const settingsPath = join(projectRoot, 'user_settings.json');
       const current = JSON.parse(readFileSync(settingsPath, 'utf8'));
-      
+
+      if (!current.watcher) current.watcher = { extra_paths: [] };
+      if (!current.watcher.extra_paths) current.watcher.extra_paths = [];
+
       if (!current.watcher.extra_paths.includes(path)) {
         current.watcher.extra_paths.push(path);
         writeFileSync(settingsPath, JSON.stringify(current, null, 2) + '\n');
         console.log(`✅ Added: ${path}`);
-        
-        await callAPI('/v1/watchdog/start', 'POST');
-        console.log('✅ Watchdog restarted');
+
+        try {
+          await callAPI('/v1/watchdog/start', 'POST');
+          console.log('✅ Watchdog restarted');
+        } catch {
+          console.log('ℹ️  Restart engine to apply changes');
+        }
       } else {
         console.log(`ℹ️  Already watched: ${path}`);
       }
@@ -154,21 +175,33 @@ program
     }
   });
 
-program
-  .command('watch list')
+watchCmd
+  .command('list')
   .description('List watched paths')
   .action(async () => {
     try {
       const watchdog = await callAPI('/v1/watchdog/status');
       console.log('📁 Watched Paths:');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      
-      watchdog.watchedPaths?.forEach((p, i) => console.log(`${i + 1}. ${p}`));
-      
+
+      if (watchdog.watchedPaths && watchdog.watchedPaths.length > 0) {
+        watchdog.watchedPaths.forEach((p, i) => console.log(`${i + 1}. ${p}`));
+      } else {
+        console.log('No paths configured.');
+        console.log('\nAdd a path: anchor watch add /path/to/chats');
+      }
+
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     } catch (error) {
-      console.error('❌ Error:', error.message);
-      process.exit(1);
+      // Fallback to settings file
+      console.log('📁 Watched Paths (from settings):');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      if (settings.watcher?.extra_paths?.length > 0) {
+        settings.watcher.extra_paths.forEach((p, i) => console.log(`${i + 1}. ${p}`));
+      } else {
+        console.log('No paths configured.');
+      }
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     }
   });
 
@@ -179,17 +212,23 @@ program
   .action(() => {
     console.log('⚙️  Configuration');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log(`Port: ${settings.server.port}`);
-    console.log(`API Key: ${settings.server.api_key ? 'set' : 'not set'}`);
-    console.log(`Watched Paths: ${settings.watcher.extra_paths.length}`);
-    settings.watcher.extra_paths.forEach(p => console.log(`   • ${p}`));
+    console.log(`Port: ${settings.server?.port || 3161}`);
+    console.log(`API Key: ${settings.server?.api_key ? 'set' : 'not set'}`);
+    console.log(`Watched Paths: ${settings.watcher?.extra_paths?.length || 0}`);
+    if (settings.watcher?.extra_paths?.length > 0) {
+      settings.watcher.extra_paths.forEach(p => console.log(`   • ${p}`));
+    }
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   });
 
-// AGENTS commands
-program
-  .command('agents discover')
-  .description('Discover agent directories')
+// AGENTS command (parent)
+const agentsCmd = program
+  .command('agents')
+  .description('Discover and manage AI agent integrations');
+
+agentsCmd
+  .command('discover')
+  .description('Discover agent chat directories')
   .action(async () => {
     const os = await import('os');
     const { join } = await import('path');
@@ -200,94 +239,205 @@ program
 
     const homeDir = os.homedir();
     const agents = [
-      { id: 'qwen', name: 'Qwen Code', paths: [join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats')] },
-      { id: 'claude', name: 'Claude Desktop', paths: [join(homeDir, '.config', 'Claude', 'chats')] },
-      { id: 'cursor', name: 'Cursor', paths: [join(homeDir, '.cursor', 'chats')] },
+      { 
+        id: 'qwen', 
+        name: 'Qwen Code', 
+        paths: [
+          join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats'),
+          join(homeDir, '.qwen', 'projects', '-', 'chats'),
+        ]
+      },
+      { 
+        id: 'claude', 
+        name: 'Claude Desktop', 
+        paths: [
+          join(homeDir, '.config', 'Claude', 'chats'),
+          join(homeDir, 'Library', 'Application Support', 'Claude', 'chats'), // macOS
+        ]
+      },
+      { 
+        id: 'cursor', 
+        name: 'Cursor', 
+        paths: [join(homeDir, '.cursor', 'chats')]
+      },
+      {
+        id: 'continue',
+        name: 'Continue.dev',
+        paths: [join(homeDir, '.continue', 'chats')]
+      }
     ];
 
+    let foundAny = false;
     for (const agent of agents) {
-      for (const path of agent.paths) {
+      for (const agentPath of agent.paths) {
         try {
-          const s = await stat(path);
+          const s = await stat(agentPath);
           if (s.isDirectory()) {
-            const files = await readdir(path);
+            const files = await readdir(agentPath);
             const count = files.filter(f => f.endsWith('.jsonl')).length;
-            const watched = settings.watcher.extra_paths.some(p => p.includes(path));
-            
-            console.log(`\n✅ ${agent.name}: ${path}`);
+            const watched = settings.watcher?.extra_paths?.some(p => p.includes(agentPath)) || false;
+
+            console.log(`\n✅ ${agent.name}`);
+            console.log(`   Path: ${agentPath}`);
             console.log(`   Sessions: ${count} files`);
             console.log(`   Watched: ${watched ? '✅' : '❌'}`);
-            if (!watched) console.log(`   → Add: anchor agents add ${agent.id}`);
+            if (!watched) {
+              console.log(`   → Add: anchor agents add ${agent.id}`);
+            }
+            foundAny = true;
             break;
           }
         } catch (e) { /* not found */ }
       }
     }
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    if (!foundAny) {
+      console.log('\n❌ No agent chat directories found.');
+      console.log('\nSupported agents:');
+      console.log('   • Qwen Code (~/.qwen/projects/*/chats)');
+      console.log('   • Claude Desktop (~/.config/Claude/chats)');
+      console.log('   • Cursor (~/.cursor/chats)');
+      console.log('   • Continue.dev (~/.continue/chats)');
+    }
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   });
 
-program
-  .command('agents add <agent>')
-  .description('Add agent directory')
+agentsCmd
+  .command('add <agent>')
+  .description('Add an agent\'s chat directory to watched paths')
   .action(async (agentId) => {
     const os = await import('os');
     const { join } = await import('path');
     const { stat } = await import('fs/promises');
 
     const homeDir = os.homedir();
-    const paths = {
-      qwen: join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats'),
-      claude: join(homeDir, '.config', 'Claude', 'chats'),
-      cursor: join(homeDir, '.cursor', 'chats'),
+    const agentPaths = {
+      qwen: [
+        join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats'),
+        join(homeDir, '.qwen', 'projects', '-', 'chats'),
+      ],
+      claude: [
+        join(homeDir, '.config', 'Claude', 'chats'),
+        join(homeDir, 'Library', 'Application Support', 'Claude', 'chats'),
+      ],
+      cursor: [join(homeDir, '.cursor', 'chats')],
+      continue: [join(homeDir, '.continue', 'chats')],
     };
 
-    const path = paths[agentId.toLowerCase()];
-    if (!path) {
-      console.error('❌ Unknown agent. Available: qwen, claude, cursor');
+    const paths = agentPaths[agentId.toLowerCase()];
+    if (!paths) {
+      console.error('❌ Unknown agent. Available: qwen, claude, cursor, continue');
+      process.exit(1);
+    }
+
+    // Find first existing path
+    let foundPath = null;
+    for (const p of paths) {
+      try {
+        await stat(p);
+        foundPath = p;
+        break;
+      } catch {
+        // Try next
+      }
+    }
+
+    if (!foundPath) {
+      console.error(`❌ Agent directory not found for: ${agentId}`);
+      console.log(`   Expected locations:`);
+      paths.forEach(p => console.log(`   • ${p}`));
       process.exit(1);
     }
 
     try {
-      await stat(path);
       const settingsPath = join(projectRoot, 'user_settings.json');
       const current = JSON.parse(readFileSync(settingsPath, 'utf8'));
-      
-      if (!current.watcher.extra_paths.includes(path)) {
-        current.watcher.extra_paths.push(path);
+
+      if (!current.watcher) current.watcher = { extra_paths: [] };
+      if (!current.watcher.extra_paths) current.watcher.extra_paths = [];
+
+      if (!current.watcher.extra_paths.includes(foundPath)) {
+        current.watcher.extra_paths.push(foundPath);
         writeFileSync(settingsPath, JSON.stringify(current, null, 2) + '\n');
-        console.log(`✅ Added ${agentId}: ${path}`);
+        console.log(`✅ Added ${agentId}: ${foundPath}`);
+        console.log('ℹ️  Restart engine to apply changes');
       } else {
-        console.log(`ℹ️  Already added: ${path}`);
+        console.log(`ℹ️  Already added: ${foundPath}`);
       }
     } catch (error) {
-      console.error(`❌ Not found: ${path}`);
+      console.error('❌ Error:', error.message);
       process.exit(1);
     }
   });
 
-// INGEST status command (placeholder - API not implemented yet)
-program
-  .command('ingest status')
+// INGEST command (parent)
+const ingestCmd = program
+  .command('ingest')
+  .description('Manage ingestion');
+
+ingestCmd
+  .command('status')
   .description('Check ingestion progress')
   .action(async () => {
     try {
       const status = await callAPI('/v1/ingest/status');
       console.log('📁 Ingestion Status');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      
+
       if (status.active) {
         console.log(`Status: ✅ Active`);
-        console.log(`Processed: ${status.processed || 0} files`);
-        console.log(`Atoms: ${formatNumber(status.atomsCreated || 0)}`);
+        console.log(`Current File: ${status.currentFile || 'N/A'}`);
+        console.log(`Progress: ${status.processed || 0}/${status.total || '?'} files`);
+        console.log(`Atoms Created: ${formatNumber(status.atomsCreated || 0)}`);
+        if (status.errors && status.errors.length > 0) {
+          console.log(`Errors: ${status.errors.length}`);
+        }
       } else {
         console.log('Status: ⏸️  Inactive');
+        console.log('\nStart ingestion: anchor ingest start');
       }
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     } catch (error) {
       console.log('📁 Ingestion Status');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       console.log('Status: ⏸️  Inactive (no active ingestion)');
+      console.log('\nStart ingestion: anchor ingest start');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    }
+  });
+
+ingestCmd
+  .command('start')
+  .description('Start ingestion of watched paths')
+  .action(async () => {
+    try {
+      const result = await callAPI('/v1/watchdog/ingest', 'POST');
+      console.log('✅ Ingestion started');
+      console.log(`   Files: ${result.filesProcessed || 0} processed`);
+    } catch (error) {
+      console.error('❌ Error:', error.message);
+      process.exit(1);
+    }
+  });
+
+// GRAPH command (parent) - placeholder for Phase 2
+const graphCmd = program
+  .command('graph')
+  .description('Graph operations');
+
+graphCmd
+  .command('export')
+  .description('Export knowledge graph as markdown')
+  .option('-o, --output <file>', 'Output file', 'KNOWLEDGE.md')
+  .action(async (options) => {
+    try {
+      const result = await callAPI('/v1/graph/export');
+      writeFileSync(options.output, result.content || result);
+      console.log(`✅ Exported to: ${options.output}`);
+    } catch (error) {
+      console.error('❌ Error:', error.message);
+      console.log('\nNote: Graph export endpoint not yet implemented.');
+      process.exit(1);
     }
   });
 

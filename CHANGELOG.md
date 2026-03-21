@@ -6,6 +6,56 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.9.0] - 2026-03-22 — CLI Commands, Agent Discovery, Frictionless Experience
+
+### ✨ Features
+
+#### CLI Commands (Feature 3.1)
+- **`anchor status`** - Show system health, database stats, watchdog status
+- **`anchor search <query>`** - Search memory with optional `--debug` and `--max-results` flags
+- **`anchor watch add <path>`** - Add a path to watched directories
+- **`anchor watch list`** - List all watched paths
+- **`anchor config`** - Display current configuration
+- **`anchor agents discover`** - Auto-detect Qwen, Claude, Cursor, Continue chat directories
+- **`anchor agents add <agent>`** - Add agent's chat directory to watched paths
+- **`anchor ingest status`** - Check ingestion progress (requires API endpoint)
+- **`anchor ingest start`** - Trigger ingestion of watched paths
+- **`anchor graph export`** - Export knowledge graph as markdown (placeholder)
+
+#### CLI Implementation
+- Pure JavaScript implementation (no compilation required)
+- Reads settings from `user_settings.json` (same as engine)
+- API client with proper error handling and connection detection
+- Test suite with 8 passing tests (`cli/run-tests.cjs`)
+
+### 🔧 Technical
+
+- Fixed duplicate command registration in Commander.js
+- Added proper subcommand structure for `watch`, `agents`, `ingest`, `graph`
+- Updated `jest.config.cjs` to include CLI tests
+- Dependencies already present: `commander`, `axios`, `undici`
+
+### 📋 P0 Fixes Completed
+
+| # | Fix | Status |
+|---|-----|--------|
+| 1 | Watchdog Auto-Enable | ✅ Complete |
+| 2 | Search Returns Content | ✅ Complete |
+| 3 | Startup Status Banner | ✅ Complete |
+| 4 | MCP Reads Settings | ✅ Complete |
+
+### 📋 P1 Features Status
+
+| # | Feature | Status |
+|---|---------|--------|
+| 3.1 | CLI Commands | ✅ Complete |
+| 3.2 | Agent Discovery Service | ⏳ Pending |
+| 3.3 | Ingestion Status API | ⏳ Pending |
+| 3.4 | Graph Export | ⏳ Pending |
+| 3.5 | Agent Documentation | ⏳ Pending |
+
+---
+
 ## [4.8.1] - 2026-03-20 — Local-Data Directory Restructuring
 
 ### 🔄 Breaking Changes

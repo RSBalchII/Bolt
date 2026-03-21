@@ -11,7 +11,8 @@ module.exports = {
   // Test file patterns - ONLY Jest-style tests
   testMatch: [
     '**/engine/tests/**/*.test.ts',
-    '**/engine/src/**/*.test.ts'
+    '**/engine/src/**/*.test.ts',
+    '**/cli/**/*.test.cjs'
     // Note: cpp/tests/*.test.js excluded - requires native modules
   ],
 
