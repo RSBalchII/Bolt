@@ -13,17 +13,24 @@
  */
 
 import { Command } from 'commander';
-import { readFileSync, existsSync } from 'fs';
+import { callAPI, formatNumber, loadConfig, updateSettings } from './api-client.js';
+import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { fetch } from 'undici';
 
 // Get CLI directory
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, '..');
 
-// Load settings
-let settings = {
+const program = new Command();
+
+program
+  .name('anchor')
+  .description('Bolt Memory CLI')
+  .version('4.9.0');
+
+// Load settings for commands that need them
+let settings: any = {
   server: { port: 3161, api_key: '' },
   watcher: { extra_paths: [] }
 };
@@ -33,52 +40,9 @@ try {
   if (existsSync(settingsPath)) {
     settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
   }
-} catch (error) {
-  console.warn('⚠️  Could not load user_settings.json, using defaults');
+} catch (error: any) {
+  // Silently use defaults
 }
-
-const API_URL = `http://localhost:${settings.server.port}`;
-const API_KEY = settings.server.api_key;
-
-// Helper function for API calls
-async function callAPI(endpoint: string, method: string = 'GET', body?: any): Promise<any> {
-  const url = `${API_URL}${endpoint}`;
-  const options: any = {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  if (API_KEY) {
-    options.headers['Authorization'] = `Bearer ${API_KEY}`;
-  }
-
-  if (body && method !== 'GET') {
-    options.body = JSON.stringify(body);
-  }
-
-  const response = await fetch(url, options);
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`API error (${response.status}): ${error}`);
-  }
-
-  return response.json();
-}
-
-// Format numbers with commas
-function formatNumber(num: number): string {
-  return num.toLocaleString();
-}
-
-const program = new Command();
-
-program
-  .name('anchor')
-  .description('Bolt Memory CLI')
-  .version('4.9.0');
 
 // ──────────────────────────────────────────────────────────────────────────────
 // STATUS COMMAND
@@ -204,16 +168,23 @@ program
   .description('Add a path to watch')
   .action(async (path) => {
     try {
+      const settingsPath = join(projectRoot, 'user_settings.json');
+      
+      if (!existsSync(settingsPath)) {
+        console.error('❌ user_settings.json not found');
+        process.exit(1);
+      }
+
+      // Read current settings
+      const currentSettings = JSON.parse(readFileSync(settingsPath, 'utf8'));
+      
       // Add to settings
-      if (!settings.watcher.extra_paths.includes(path)) {
-        settings.watcher.extra_paths.push(path);
+      if (!currentSettings.watcher.extra_paths.includes(path)) {
+        currentSettings.watcher.extra_paths.push(path);
         
-        // Save settings
-        const settingsPath = join(projectRoot, 'user_settings.json');
-        readFileSync(settingsPath, 'utf8'); // Check if exists
-        // Note: In real implementation, would write back to file
+        // Write back to settings file
+        writeFileSync(settingsPath, JSON.stringify(currentSettings, null, 2) + '\n');
         console.log(`✅ Added to watcher: ${path}`);
-        console.log('⚠️  Settings file update not implemented in CLI yet - manual edit required');
       } else {
         console.log(`ℹ️  Path already watched: ${path}`);
       }
@@ -366,6 +337,7 @@ program
     const os = await import('os');
     const { join } = await import('path');
     const { stat } = await import('fs/promises');
+    const { writeFileSync } = await import('fs');
 
     const homeDir = os.homedir();
     const agentPaths: any = {
@@ -385,15 +357,24 @@ program
     try {
       await stat(path);
       
-      if (!settings.watcher.extra_paths.includes(path)) {
-        settings.watcher.extra_paths.push(path);
+      const settingsPath = join(projectRoot, 'user_settings.json');
+      const currentSettings = JSON.parse(readFileSync(settingsPath, 'utf8'));
+      
+      if (!currentSettings.watcher.extra_paths.includes(path)) {
+        currentSettings.watcher.extra_paths.push(path);
+        writeFileSync(settingsPath, JSON.stringify(currentSettings, null, 2) + '\n');
         console.log(`✅ Added ${agentId} chat directory: ${path}`);
-        console.log('⚠️  Restart engine to apply changes: anchor-engine restart');
+        console.log('ℹ️  Restart engine to apply changes: anchor-engine restart');
       } else {
         console.log(`ℹ️  Path already watched: ${path}`);
       }
     } catch (error: any) {
-      console.error(`❌ Path not found: ${path}`);
+      if (error.code === 'ENOENT') {
+        console.error(`❌ Path not found: ${path}`);
+        console.error('Make sure the agent is installed first.');
+      } else {
+        console.error('❌ Error:', error.message);
+      }
       process.exit(1);
     }
   });
