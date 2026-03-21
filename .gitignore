@@ -1,76 +1,75 @@
-# Sensitive Data & Secrets
-.env
-.env.*
-*.env
-prompts/
+# Bolt Memory - Git Ignore
 
-# Additional sensitive data patterns
-**/context_data/
-**/databases/
-**/personal_contacts/
-*secret*
-*token*
-*credential*
-
-# Database & Storage
-context.db/
-context_data/
+# User Data & Database (NEVER commit these)
+local-data/
+engine/context_data/
+engine/context/
 backups/
 logs/
 *.log
-*.sqlite
-*.sqlite-*
+engine-startup.log
+engine-startup-*.log
+
+# Sensitive Configuration
+user_settings.json
+user_settings.*.json
+sovereign.yaml
+.env
+.env.*
+*.env
+orchestrator-config.json
+
+# Build Outputs
+dist/
+engine/dist/
+engine/dist-android/
+engine/dist-win/
+node_modules/
+packages/*/node_modules/
+integrations/*/dist/
+mcp-server/dist/
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+.qwen/
+
+# Test Artifacts
+coverage/
+test-results/
+*.test.log
+test-github-ingest-*/
+test-physics-db-*/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Generated Documentation
+QWEN.md
+
+# Checkpoint Files (optional - uncomment if you want to keep checkpoints)
+# local-data/distilled/
+
+# Database Files
 *.db
 *.db-journal
+*.sqlite
+*.sqlite-*
 
-# Model Archives & Heavy Binaries
-archive/
-cpp/
+# Model Files (too large for git)
 models/
 *.gguf
 *.bin
 *.pth
 
-# Code Dependencies
-node_modules/
-dist/
-build/
-engine/build/
-native/bin/
-.pnpm-store/
-*.tsbuildinfo
-
-# Backups (keep at root but gitignore contents)
-backups/*.json
-backups/*.db
-
-# IDE & System
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-*.bak
-
-# Test artifacts
-test-github-ingest-*/
-test-physics-db-*/
-
-# Temporary/User Specific
-codebase
-codebase/*
-external-inbox/*
-inbox/*
-local-data/*
-mirrored_brain/
-notebook/
-user_settings.json
-context/
-
-# Generated documentation
-QWEN.md
-
-# Android binary output
-engine/dist-android/
-
-engine/dist-win/
-coverage/
+# Android/Termux specific
+data/data/com.termux/

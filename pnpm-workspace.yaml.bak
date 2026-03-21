@@ -1,0 +1,7 @@
+packages:
+  - engine
+  - shared
+  - "packages/*"
+
+ignoredBuiltDependencies:
+  - sharp
