@@ -1,226 +1,222 @@
-# Anchor Engine - Documentation Index
+# 📚 Bolt Memory Documentation Index
 
-**Version:** 4.8.0 | **Updated:** March 18, 2026 | **Status:** ✅ Production Ready
-
----
-
-## 📚 Quick Navigation
-
-### Getting Started
-- **[README.md](../README.md)** - Quick start, installation, usage guide
-- **[CHANGELOG.md](../CHANGELOG.md)** - Version history (latest: v4.8.0)
-- **[CONTRIBUTING.md](../CONTRIBUTING.md)** - How to contribute
-
-### Core Documentation
-- **[docs/API.md](API.md)** - Complete API reference
-- **[docs/DEPLOYMENT.md](DEPLOYMENT.md)** - Deployment guide (local, Docker, VPS, K8s)
-- **[docs/TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Troubleshooting guide
-- **[docs/whitepaper.md](whitepaper.md)** - STAR Algorithm whitepaper
-- **[specs/spec.md](../specs/spec.md)** - System specification with architecture diagrams
-- **[specs/current-standards/](../specs/current-standards/)** - Active architecture standards (001-010)
-
-### Development
-- **[engine/src/README.md](../engine/src/README.md)** - Source code overview
-- **[tests/README.md](../tests/README.md)** - Testing guide
-- **[benchmarks/README.md](../benchmarks/README.md)** - Benchmarking framework
-- **[mcp-server/README.md](../mcp-server/README.md)** - MCP server integration
+**Last Updated:** 2026-03-21  
+**Version:** 4.8.2
 
 ---
 
-## 🎯 Documentation by Use Case
+## 🚀 Quick Start
 
-### "I want to install and run Anchor Engine"
-→ Start with **[README.md](../README.md)** - Quick Start section
-
-### "I need API documentation"
-→ Read **[docs/API.md](API.md)** - Complete API reference with examples
-
-### "I want to deploy to production"
-→ Follow **[docs/DEPLOYMENT.md](DEPLOYMENT.md)** - All deployment options
-
-### "Something's not working"
-→ Check **[docs/TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and fixes
-
-### "I need to understand the system architecture"
-→ Study **[specs/spec.md](../specs/spec.md)** - System specification with diagrams
-
-### "I'm researching the theory behind Anchor Engine"
-→ Read **[docs/whitepaper.md](whitepaper.md)** - Academic paper
-
-### "I want to understand the search algorithm"
-→ See **[specs/current-standards/004-streaming-search.md](../specs/current-standards/004-streaming-search.md)**
-
-### "How does distillation work?"
-→ Read **[specs/current-standards/010-radial-distillation-v2.md](../specs/current-standards/010-radial-distillation-v2.md)**
-
-### "I want to contribute code"
-→ Start with **[engine/src/README.md](../engine/src/README.md)** - Source overview
-
-### "I need to write tests"
-→ Follow **[tests/README.md](../tests/README.md)** - Testing guide
-
-### "I want to connect via MCP"
-→ See **[mcp-server/README.md](../mcp-server/README.md)** - MCP integration
+| Document | Purpose | For |
+|----------|---------|-----|
+| **[README.md](../README.md)** | Project overview, 30-second setup | Everyone |
+| **[docs/quick-start.md](user-guide/quick-start.md)** | Simplified getting started | New users |
+| **[docs/user-guide/qwen-integration.md](user-guide/qwen-integration.md)** | Qwen Code setup | Qwen users |
+| **[docs/user-guide/mcp-setup.md](user-guide/mcp-setup.md)** | MCP server configuration | Developers |
 
 ---
 
-## 📊 Key Metrics (v4.8.0)
+## 📖 User Guide
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| **Context Retrieval** | 618k chars | ✅ +18% vs whitepaper |
-| **Memory Peak** | 510MB | ✅ -70% vs whitepaper |
-| **Search Latency** | <200ms (p95) | ✅ Optimized |
-| **Ingestion Throughput** | 1,200 mol/sec | ✅ Verified |
-| **Deduplication Rate** | 40-50% | ✅ With SimHash |
-| **Session Index** | NEW in v4.8.0 | ✅ Two-tier retrieval |
-| **MCP Write Ops** | NEW in v4.8.0 | ✅ Opt-in ingest |
+### **Getting Started**
+- [Quick Start](user-guide/quick-start.md) - 5-minute setup
+- [Installation](user-guide/installation.md) - Detailed install guide
+- [Qwen Integration](user-guide/qwen-integration.md) - Qwen Code setup
+- [MCP Setup](user-guide/mcp-setup.md) - MCP server configuration
 
----
+### **Usage**
+- [CLI Commands](user-guide/cli-commands.md) - All `anchor` commands
+- [Search Examples](user-guide/search-examples.md) - Query patterns
+- [Configuration](user-guide/configuration.md) - Settings reference
+- [Best Practices](user-guide/best-practices.md) - Usage tips
 
-## 🗂️ Document Structure
-
-```
-anchor-engine-node/
-├── README.md                      # Start here - Quick start & usage
-├── CHANGELOG.md                   # What's new (v4.8.0)
-├── CONTRIBUTING.md                # How to contribute
-│
-├── docs/
-│   ├── API.md                     # ✅ NEW - Complete API reference
-│   ├── DEPLOYMENT.md              # ✅ NEW - Deployment guide
-│   ├── TROUBLESHOOTING.md         # ✅ NEW - Troubleshooting
-│   ├── whitepaper.md              # STAR algorithm paper
-│   ├── code-patterns.md           # Code patterns
-│   ├── INDEX.md                   # This file - navigation hub
-│   └── arxiv/                     # arXiv submission docs
-│
-├── specs/
-│   ├── spec.md                    # System spec with diagrams
-│   ├── API-ROUTE-MAP.md           # Detailed API spec
-│   ├── plan.md                    # Roadmap
-│   ├── tasks.md                   # Current tasks
-│   ├── current-standards/         # ✅ Active standards (001-010)
-│   ├── archive-standards/         # Historical standards (059-200+)
-│   └── archive-legacy/            # Legacy docs
-│
-├── engine/
-│   └── src/
-│       └── README.md              # ✅ NEW - Source code overview
-│
-├── tests/
-│   └── README.md                  # ✅ NEW - Testing guide
-│
-├── benchmarks/
-│   └── README.md                  # Benchmarking framework
-│
-└── mcp-server/
-    └── README.md                  # MCP server integration
-```
+### **Troubleshooting**
+- [Troubleshooting Guide](TROUBLESHOOTING.md) - Common issues
+- [FAQ](user-guide/faq.md) - Frequently asked questions
+- [Error Codes](user-guide/error-codes.md) - Error reference
 
 ---
 
-## 🎓 Learning Path
+## 🔧 API Reference
 
-### Beginner (Just Getting Started)
-1. **[README.md](../README.md)** - Installation & first query
-2. **[docs/API.md](API.md)** - API basics
-3. **[CHANGELOG.md](../CHANGELOG.md)** - Recent features
-
-### Intermediate (Understanding the System)
-1. **[specs/spec.md](../specs/spec.md)** - Full system specification
-2. **[specs/current-standards/004-streaming-search.md](../specs/current-standards/004-streaming-search.md)** - Search algorithm
-3. **[specs/current-standards/010-radial-distillation-v2.md](../specs/current-standards/010-radial-distillation-v2.md)** - Distillation v2.0
-4. **[engine/src/README.md](../engine/src/README.md)** - Source overview
-
-### Advanced (Deep Dive)
-1. **[docs/whitepaper.md](whitepaper.md)** - Theoretical foundation
-2. **[tests/README.md](../tests/README.md)** - Test suite
-3. **[specs/current-standards/](../specs/current-standards/)** - All active standards
-4. **[docs/DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment
-
-### Contributor (Writing Code)
-1. **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Contribution guidelines
-2. **[engine/src/README.md](../engine/src/README.md)** - Source structure
-3. **[tests/README.md](../tests/README.md)** - Testing requirements
-4. **[specs/current-standards/](../specs/current-standards/)** - Architecture standards
+| Document | Purpose |
+|----------|---------|
+| **[API.md](API.md)** | Complete API reference |
+| **[MCP Tools](integrations/mcp-tools.md)** | MCP server tools |
+| **[Endpoints](api-reference/endpoints.md)** | HTTP endpoints |
+| **[Schemas](api-reference/schemas.md)** | Data schemas |
 
 ---
 
-## 🔬 Recent Updates (v4.8.0 - Mar 18, 2026)
+.
 
-### New Features
-- **Session Index** - Two-tier memory retrieval (index → targeted fetch)
-- **MCP Write Operations** - `anchor_ingest_text` and `anchor_ingest_file` tools
-- **Paste & Ingest UI** - Quick text ingestion via Web UI
-- **Philosophy Documentation** - Core principles embedded throughout docs
+## 🏛️ Architecture
 
-### New Documentation
-- **docs/API.md** - Complete API reference
-- **docs/DEPLOYMENT.md** - Deployment guide (all platforms)
-- **docs/TROUBLESHOOTING.md** - Troubleshooting by category
-- **engine/src/README.md** - Source code overview
-- **tests/README.md** - Testing guide
+### **Core Concepts**
+- [Whitepaper](whitepaper.md) - STAR Algorithm academic paper
+- [Executive Summary](STAR_Whitepaper_Executive.md) - TL;DR version
+- [System Spec](../specs/spec.md) - Technical specification
+- [Architecture Overview](architecture/overview.md) - System design
 
-### Documentation Consolidation
-- Merged architecture diagrams into `specs/spec.md`
-- Archived 7 redundant historical documents
-- Updated all links to point to current docs
+### **Standards**
+- **[Active Standards](../specs/current-standards/)** - Current standards (001-010)
+- **[Standard 132](architecture/standards/standard-132.md)** - Search Content Return
+- **[Standard 133](architecture/standards/standard-133.md)** - Startup Banner
+- **[Standard 134](architecture/standards/standard-134.md)** - Settings Unity
+- **[Standard 135](architecture/standards/standard-135.md)** - Watchdog Auto-Enable
+- **[Standard 136](architecture/standards/standard-136.md)** - Streaming Search
+- **[Archive](../specs/archive-standards/)** - Historical standards (059-136+)
 
----
-
-## 📁 Documentation Categories
-
-### User-Facing
-| Document | Audience | Purpose |
-|----------|----------|---------|
-| README.md | All users | Quick start & usage |
-| docs/API.md | Developers | API reference |
-| docs/DEPLOYMENT.md | DevOps | Deployment guide |
-| docs/TROUBLESHOOTING.md | All users | Fix common issues |
-| mcp-server/README.md | MCP users | MCP integration |
-
-### Developer-Facing
-| Document | Audience | Purpose |
-|----------|----------|---------|
-| engine/src/README.md | Contributors | Source overview |
-| tests/README.md | Contributors | Testing guide |
-| benchmarks/README.md | Contributors | Performance testing |
-| specs/current-standards/ | Contributors | Architecture standards |
-
-### Academic/Research
-| Document | Audience | Purpose |
-|----------|----------|---------|
-| docs/whitepaper.md | Researchers | STAR algorithm paper |
-| specs/spec.md | Architects | System specification |
-| docs/arxiv/ | Researchers | arXiv submission |
+### **Algorithms**
+- [Recursive Search Fallbacks](../RECURSIVE_SEARCH_FALLBACKS.md) - 6-level search strategy
+- [Physics Tag Walker](architecture/physics-tag-walker.md) - Graph traversal
+- [Radial Distillation](architecture/radial-distillation.md) - Knowledge compression
+- [Mirror Protocol](architecture/mirror-protocol.md) - File system reflection
 
 ---
 
-## 🔗 External Resources
+## 👩‍💻 Development
 
-- **GitHub Repository:** https://github.com/RSBalchII/anchor-engine-node
-- **License:** AGPL-3.0
-- **NPM Packages:** @rbalchii/* (native modules)
-- **DOI:** https://doi.org/10.5281/zenodo.18841399
+### **Contributing**
+- **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Contribution guidelines
+- **[CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md)** - Community standards
+- [Development Setup](development/setup.md) - Local development
+- [Testing Guide](development/testing.md) - Testing framework
+- [Code Patterns](code-patterns.md) - Coding standards
 
----
-
-## 📞 Support & Contribution
-
-### Getting Help
-- Check **[docs/TROUBLESHOOTING.md](TROUBLESHOOTING.md)** for common issues
-- Review **[specs/spec.md](../specs/spec.md)** for system understanding
-- Read **[CHANGELOG.md](../CHANGELOG.md)** for recent fixes
-
-### Contributing
-1. Read **[CONTRIBUTING.md](../CONTRIBUTING.md)** for guidelines
-2. Review **[engine/src/README.md](../engine/src/README.md)** for source structure
-3. Follow **[specs/current-standards/](../specs/current-standards/)** for architecture
-4. Run **[tests/README.md](../tests/README.md)** test suite before submitting
+### **Project Management**
+- **[specs/tasks.md](../specs/tasks.md)** - Current tasks
+- **[specs/plan.md](../specs/plan.md)** - Project roadmap
+- [Project Status](project/status.md) - Current status
+- [Daily Notes](daily/) - Daily development logs
 
 ---
 
-**Last Updated:** March 18, 2026  
-**Version:** 4.8.0  
-**Status:** ✅ Production Ready
+## 🔌 Integrations
+
+| Integration | Document | Status |
+|-------------|----------|--------|
+| **Qwen Code** | [user-guide/qwen-integration.md](user-guide/qwen-integration.md) | ✅ Active |
+| **MCP Server** | [integrations/mcp-server.md](integrations/mcp-server.md) | ✅ Active |
+| **Claude Desktop** | [integrations/claude-desktop.md](integrations/claude-desktop.md) | 🚧 Planned |
+| **Cursor IDE** | [integrations/cursor.md](integrations/cursor.md) | 🚧 Planned |
+| **Continue.dev** | [integrations/continue.md](integrations/continue.md) | 🚧 Planned |
+
+---
+
+## 📊 Project Documentation
+
+### **Status & Planning**
+- [Project Status](project/status.md) - Current state
+- [Roadmap](../specs/plan.md) - Future plans
+- [Tasks](../specs/tasks.md) - Active tasks
+
+### **Reviews & Analysis**
+- [Code Reviews](reviews/) - PR reviews
+- [Performance Analysis](project/performance.md) - Benchmarks
+- [Security Audit](project/security.md) - Security review
+
+### **Historical**
+- [Daily Notes](daily/) - Development logs
+- [arXiv Submission](arxiv/) - Academic paper
+- [Project History](project/history.md) - Timeline
+
+---
+
+## 🐛 Known Issues & Improvements
+
+| Document | Purpose |
+|----------|---------|
+| **[PAIN_POINTS_DOCUMENTATION.md](../PAIN_POINTS_DOCUMENTATION.md)** | 12 pain points documented with fixes |
+| **[FRICTIONLESS_SPEC.md](../FRICTIONLESS_SPEC.md)** | Future improvements specification |
+| **[CHANGELOG.md](../CHANGELOG.md)** | Version history, bug fixes |
+
+---
+
+## 📦 Deployment
+
+| Document | Purpose |
+|----------|---------|
+| **[DEPLOYMENT.md](DEPLOYMENT.md)** | Production deployment |
+| **[guides/android-termux.md](guides/android-termux.md)** | Termux installation |
+| **[guides/docker.md](guides/docker.md)** | Docker deployment |
+| **[guides/kubernetes.md](guides/kubernetes.md)** | Kubernetes deployment |
+
+---
+
+## 🎯 Documentation by Role
+
+### **For New Users**
+1. Start with [README.md](../README.md)
+2. Read [Quick Start](user-guide/quick-start.md)
+3. Follow [Qwen Integration](user-guide/qwen-integration.md)
+4. Reference [Troubleshooting](TROUBLESHOOTING.md) if needed
+
+### **For Developers**
+1. Read [CONTRIBUTING.md](../CONTRIBUTING.md)
+2. Review [Development Setup](development/setup.md)
+3. Study [Architecture Overview](architecture/overview.md)
+4. Check [Code Patterns](code-patterns.md)
+
+### **For Researchers**
+1. Read [Whitepaper](whitepaper.md)
+2. Review [Executive Summary](STAR_Whitepaper_Executive.md)
+3. Study [STAR Algorithm](architecture/star-algorithm.md)
+4. Reference [API.md](API.md)
+
+### **For DevOps**
+1. Read [DEPLOYMENT.md](DEPLOYMENT.md)
+2. Review [guides/android-termux.md](guides/android-termux.md)
+3. Check [Monitoring](project/monitoring.md)
+4. Reference [Error Codes](user-guide/error-codes.md)
+
+---
+
+## 📝 Documentation Standards
+
+All documentation follows these standards:
+
+- **Naming:** lowercase-with-hyphens.md
+- **Headers:** H1 for title, H2 for sections, H3 for subsections
+- **Code:** Fenced code blocks with language specifier
+- **Links:** Relative links within project, absolute for external
+- **Updates:** Include "Last Updated" date at bottom
+
+---
+
+## 🔍 Finding Documents
+
+### **By Topic**
+
+| Topic | Documents |
+|-------|-----------|
+| **Installation** | README.md, user-guide/installation.md, guides/android-termux.md |
+| **Configuration** | user-guide/configuration.md, ../user_settings.json |
+| **Search** | user-guide/search-examples.md, ../RECURSIVE_SEARCH_FALLBACKS.md |
+| **MCP** | user-guide/mcp-setup.md, integrations/mcp-server.md |
+| **Troubleshooting** | TROUBLESHOOTING.md, user-guide/faq.md |
+| **Architecture** | architecture/overview.md, ../specs/spec.md |
+| **Standards** | ../specs/current-standards/, architecture/standards/ |
+| **Development** | development/setup.md, ../CONTRIBUTING.md |
+
+### **By File Type**
+
+| Type | Location |
+|------|----------|
+| **Guides** | docs/user-guide/, docs/guides/ |
+| **Reference** | docs/api-reference/, docs/architecture/ |
+| **Project** | docs/project/, ../specs/ |
+| **Historical** | docs/daily/, docs/arxiv/, ../specs/archive-standards/ |
+
+---
+
+## 📚 Related Projects
+
+- **[Anchor Engine](https://github.com/RSBalchII/anchor-engine-node)** - Core project
+- **[Anchor Android](https://github.com/RSBalchII/anchor-android)** - Android app
+- **[npm Package](https://www.npmjs.com/package/@rbalchii/anchor-engine)** - Published package
+
+---
+
+**Need Help?** Open an issue on [GitHub](https://github.com/RSBalchII/Bolt/issues)  
+**Want to Contribute?** See [CONTRIBUTING.md](../CONTRIBUTING.md)
