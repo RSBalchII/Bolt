@@ -230,74 +230,96 @@ agentsCmd
   .command('discover')
   .description('Discover agent chat directories')
   .action(async () => {
-    const os = await import('os');
-    const { join } = await import('path');
-    const { stat, readdir } = await import('fs/promises');
-
     console.log('🔍 Discovering agents...');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-    const homeDir = os.homedir();
-    const agents = [
-      { 
-        id: 'qwen', 
-        name: 'Qwen Code', 
-        paths: [
-          join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats'),
-          join(homeDir, '.qwen', 'projects', '-', 'chats'),
-        ]
-      },
-      { 
-        id: 'claude', 
-        name: 'Claude Desktop', 
-        paths: [
-          join(homeDir, '.config', 'Claude', 'chats'),
-          join(homeDir, 'Library', 'Application Support', 'Claude', 'chats'), // macOS
-        ]
-      },
-      { 
-        id: 'cursor', 
-        name: 'Cursor', 
-        paths: [join(homeDir, '.cursor', 'chats')]
-      },
-      {
-        id: 'continue',
-        name: 'Continue.dev',
-        paths: [join(homeDir, '.continue', 'chats')]
-      }
-    ];
+    try {
+      // Try API endpoint first
+      const result = await callAPI('/v1/agent/discover');
 
-    let foundAny = false;
-    for (const agent of agents) {
-      for (const agentPath of agent.paths) {
-        try {
-          const s = await stat(agentPath);
-          if (s.isDirectory()) {
-            const files = await readdir(agentPath);
-            const count = files.filter(f => f.endsWith('.jsonl')).length;
-            const watched = settings.watcher?.extra_paths?.some(p => p.includes(agentPath)) || false;
-
-            console.log(`\n✅ ${agent.name}`);
-            console.log(`   Path: ${agentPath}`);
-            console.log(`   Sessions: ${count} files`);
-            console.log(`   Watched: ${watched ? '✅' : '❌'}`);
-            if (!watched) {
-              console.log(`   → Add: anchor agents add ${agent.id}`);
-            }
-            foundAny = true;
-            break;
+      if (result.agents && result.agents.length > 0) {
+        for (const agent of result.agents) {
+          console.log(`\n✅ ${agent.name}`);
+          console.log(`   Path: ${agent.path}`);
+          console.log(`   Sessions: ${agent.sessionCount} files`);
+          console.log(`   Watched: ${agent.isWatched ? '✅' : '❌'}`);
+          if (!agent.isWatched) {
+            console.log(`   → Add: anchor agents add ${agent.id}`);
           }
-        } catch (e) { /* not found */ }
+        }
+      } else {
+        console.log('\n❌ No agent chat directories found.');
+        console.log('\nSupported agents:');
+        console.log('   • Qwen Code (~/.qwen/projects/*/chats)');
+        console.log('   • Claude Desktop (~/.config/Claude/chats)');
+        console.log('   • Cursor (~/.cursor/chats)');
+        console.log('   • Continue.dev (~/.continue/chats)');
       }
-    }
+    } catch (error) {
+      // Fallback to local discovery if API not available
+      console.log('\n⚠️  Engine not available, using local discovery...\n');
 
-    if (!foundAny) {
-      console.log('\n❌ No agent chat directories found.');
-      console.log('\nSupported agents:');
-      console.log('   • Qwen Code (~/.qwen/projects/*/chats)');
-      console.log('   • Claude Desktop (~/.config/Claude/chats)');
-      console.log('   • Cursor (~/.cursor/chats)');
-      console.log('   • Continue.dev (~/.continue/chats)');
+      const os = await import('os');
+      const { join } = await import('path');
+      const { stat, readdir } = await import('fs/promises');
+
+      const homeDir = os.homedir();
+      const agents = [
+        {
+          id: 'qwen',
+          name: 'Qwen Code',
+          paths: [
+            join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats'),
+            join(homeDir, '.qwen', 'projects', '-', 'chats'),
+          ]
+        },
+        {
+          id: 'claude',
+          name: 'Claude Desktop',
+          paths: [
+            join(homeDir, '.config', 'Claude', 'chats'),
+            join(homeDir, 'Library', 'Application Support', 'Claude', 'chats'),
+          ]
+        },
+        {
+          id: 'cursor',
+          name: 'Cursor',
+          paths: [join(homeDir, '.cursor', 'chats')]
+        },
+        {
+          id: 'continue',
+          name: 'Continue.dev',
+          paths: [join(homeDir, '.continue', 'chats')]
+        }
+      ];
+
+      let foundAny = false;
+      for (const agent of agents) {
+        for (const agentPath of agent.paths) {
+          try {
+            const s = await stat(agentPath);
+            if (s.isDirectory()) {
+              const files = await readdir(agentPath);
+              const count = files.filter(f => f.endsWith('.jsonl')).length;
+              const watched = settings.watcher?.extra_paths?.some(p => p.includes(agentPath)) || false;
+
+              console.log(`\n✅ ${agent.name}`);
+              console.log(`   Path: ${agentPath}`);
+              console.log(`   Sessions: ${count} files`);
+              console.log(`   Watched: ${watched ? '✅' : '❌'}`);
+              if (!watched) {
+                console.log(`   → Add: anchor agents add ${agent.id}`);
+              }
+              foundAny = true;
+              break;
+            }
+          } catch (e) { /* not found */ }
+        }
+      }
+
+      if (!foundAny) {
+        console.log('\n❌ No agent chat directories found.');
+      }
     }
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   });
@@ -306,50 +328,63 @@ agentsCmd
   .command('add <agent>')
   .description('Add an agent\'s chat directory to watched paths')
   .action(async (agentId) => {
-    const os = await import('os');
-    const { join } = await import('path');
-    const { stat } = await import('fs/promises');
-
-    const homeDir = os.homedir();
-    const agentPaths = {
-      qwen: [
-        join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats'),
-        join(homeDir, '.qwen', 'projects', '-', 'chats'),
-      ],
-      claude: [
-        join(homeDir, '.config', 'Claude', 'chats'),
-        join(homeDir, 'Library', 'Application Support', 'Claude', 'chats'),
-      ],
-      cursor: [join(homeDir, '.cursor', 'chats')],
-      continue: [join(homeDir, '.continue', 'chats')],
-    };
-
-    const paths = agentPaths[agentId.toLowerCase()];
-    if (!paths) {
-      console.error('❌ Unknown agent. Available: qwen, claude, cursor, continue');
-      process.exit(1);
-    }
-
-    // Find first existing path
-    let foundPath = null;
-    for (const p of paths) {
-      try {
-        await stat(p);
-        foundPath = p;
-        break;
-      } catch {
-        // Try next
-      }
-    }
-
-    if (!foundPath) {
-      console.error(`❌ Agent directory not found for: ${agentId}`);
-      console.log(`   Expected locations:`);
-      paths.forEach(p => console.log(`   • ${p}`));
-      process.exit(1);
-    }
-
     try {
+      // Try API endpoint first
+      const result = await callAPI('/v1/agent/add', 'POST', { agent_id: agentId });
+
+      if (result.status === 'success') {
+        console.log(`✅ ${result.message}`);
+        console.log(`   Path: ${result.path}`);
+      } else {
+        console.error(`❌ ${result.error}`);
+      }
+    } catch (error) {
+      // Fallback to local add if API not available
+      console.log('⚠️  Engine not available, adding to settings file directly...\n');
+
+      const os = await import('os');
+      const { join } = await import('path');
+      const { stat } = await import('fs/promises');
+
+      const homeDir = os.homedir();
+      const agentPaths = {
+        qwen: [
+          join(homeDir, '.qwen', 'projects', '-data-data-com-termux-files-home', 'chats'),
+          join(homeDir, '.qwen', 'projects', '-', 'chats'),
+        ],
+        claude: [
+          join(homeDir, '.config', 'Claude', 'chats'),
+          join(homeDir, 'Library', 'Application Support', 'Claude', 'chats'),
+        ],
+        cursor: [join(homeDir, '.cursor', 'chats')],
+        continue: [join(homeDir, '.continue', 'chats')],
+      };
+
+      const paths = agentPaths[agentId.toLowerCase()];
+      if (!paths) {
+        console.error('❌ Unknown agent. Available: qwen, claude, cursor, continue');
+        process.exit(1);
+      }
+
+      // Find first existing path
+      let foundPath = null;
+      for (const p of paths) {
+        try {
+          await stat(p);
+          foundPath = p;
+          break;
+        } catch {
+          // Try next
+        }
+      }
+
+      if (!foundPath) {
+        console.error(`❌ Agent directory not found for: ${agentId}`);
+        console.log(`   Expected locations:`);
+        paths.forEach(p => console.log(`   • ${p}`));
+        process.exit(1);
+      }
+
       const settingsPath = join(projectRoot, 'user_settings.json');
       const current = JSON.parse(readFileSync(settingsPath, 'utf8'));
 
@@ -364,9 +399,6 @@ agentsCmd
       } else {
         console.log(`ℹ️  Already added: ${foundPath}`);
       }
-    } catch (error) {
-      console.error('❌ Error:', error.message);
-      process.exit(1);
     }
   });
 
@@ -420,7 +452,7 @@ ingestCmd
     }
   });
 
-// GRAPH command (parent) - placeholder for Phase 2
+// GRAPH command (parent)
 const graphCmd = program
   .command('graph')
   .description('Graph operations');
@@ -429,14 +461,35 @@ graphCmd
   .command('export')
   .description('Export knowledge graph as markdown')
   .option('-o, --output <file>', 'Output file', 'KNOWLEDGE.md')
+  .option('--max-nodes <number>', 'Maximum nodes to include', '100')
+  .option('--no-content', 'Exclude content snippets')
   .action(async (options) => {
     try {
-      const result = await callAPI('/v1/graph/export');
-      writeFileSync(options.output, result.content || result);
-      console.log(`✅ Exported to: ${options.output}`);
+      const params = new URLSearchParams({
+        maxNodes: options.maxNodes,
+        includeContent: options.content ? 'true' : 'false'
+      });
+
+      if (options.output) {
+        params.set('output', options.output);
+      }
+
+      const result = await callAPI(`/v1/graph/export?${params}`);
+
+      if (result.status === 'success') {
+        if (result.outputPath) {
+          console.log(`✅ Exported ${result.nodeCount} nodes to: ${result.outputPath}`);
+        } else {
+          // Write content to file
+          const outputPath = options.output || 'KNOWLEDGE.md';
+          writeFileSync(outputPath, result.content);
+          console.log(`✅ Exported ${result.nodeCount} nodes to: ${outputPath}`);
+        }
+      } else {
+        console.error('❌ Export failed:', result.error);
+      }
     } catch (error) {
       console.error('❌ Error:', error.message);
-      console.log('\nNote: Graph export endpoint not yet implemented.');
       process.exit(1);
     }
   });
