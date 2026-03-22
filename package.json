@@ -7,8 +7,7 @@
   "scripts": {
     "start": "node --expose-gc --max-old-space-size=4096 node_modules/@rbalchii/anchor-engine/engine/dist/index.js start",
     "start:mcp": "node node_modules/@rbalchii/anchor-engine/mcp-server/dist/index.js",
-    "install:engine": "npm install @rbalchii/anchor-engine --ignore-scripts",
-    "postinstall": "cd node_modules/@rbalchii/anchor-engine/engine && npm run build"
+    "install:engine": "npm install @rbalchii/anchor-engine --ignore-scripts"
   },
   "keywords": [
     "ai-orchestrator",
@@ -21,7 +20,7 @@
   "author": "Robert Balch II",
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@rbalchii/anchor-engine": "^4.9.3"
+    "@rbalchii/anchor-engine": "^4.9.5"
   },
   "engines": {
     "node": ">=18.0.0"

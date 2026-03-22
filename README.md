@@ -37,9 +37,6 @@ Bolt is a pre-configured instance of Anchor Engine designed for:
 # Install dependencies (ignores native build scripts for Termux)
 npm install --ignore-scripts
 
-# Build the engine
-cd node_modules/@rbalchii/anchor-engine/engine && npm run build
-
 # Start the engine
 npm start
 
