@@ -1,0 +1,122 @@
+{
+  "metadata": {
+    "source": "Anchor Engine Radial Distiller",
+    "distilled_at": "2026-03-21T00:01:12.261Z",
+    "line_count": 16
+  },
+  "lines": [
+    {
+      "content": "cwd\":\"/data/data/com.termux/files/home",
+      "provenance": [
+        "local-data/inbox/qwen-6a85a0d4-b01a-4bb2-a08a-315a37245fc3.jsonl",
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "...uuid\":\"67f10903-4682-4c86-ac66-f38bb6d36c72",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "parentUuid\":null,\"sessionId\":\"03cdb3ca-08a3-43f3-8df6-ce27debd95fe\",2026-03-12T23:05:52.137Z\",system",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "version\":\"0.12.2",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "subslash_command",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "systemPayload\":phase\":\"invocation",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "rawCommand\":\"/approval-mode}",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "uuid\":\"1c4f8fa9-e757-40d4-a972-de59b06ddffc",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "parentUuid\":\"67f10903-4682-4c86-ac66-f38bb6d36c72",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "sessionId\":\"03cdb3ca-08a3-43f3-8df6-ce27debd95fe\",2026-03-12T23:05:52.202Z\",system...",
+      "provenance": [
+        "local-data/inbox/qwen-03cdb3ca-08a3-43f3-8df6-ce27debd95fe.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:56:40.000Z"
+    },
+    {
+      "content": "...uuid\":\"0961cb00-b8e2-41d6-bc3e-22b61868cefb",
+      "provenance": [
+        "local-data/inbox/qwen-6a85a0d4-b01a-4bb2-a08a-315a37245fc3.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:58:20.000Z"
+    },
+    {
+      "content": "parentUuid\":null,\"sessionId\":\"6a85a0d4-b01a-4bb2-a08a-315a37245fc3\",2026-03-07T15:54:07.110Z\",user",
+      "provenance": [
+        "local-data/inbox/qwen-6a85a0d4-b01a-4bb2-a08a-315a37245fc3.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:58:20.000Z"
+    },
+    {
+      "content": "version\":\"0.11.1\",role\":\"user",
+      "provenance": [
+        "local-data/inbox/qwen-6a85a0d4-b01a-4bb2-a08a-315a37245fc3.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:58:20.000Z"
+    },
+    {
+      "content": "parts\":[{lets install ripgrep globally and then in the anchor engine node project lete pull from main and review the updates]}}",
+      "provenance": [
+        "local-data/inbox/qwen-6a85a0d4-b01a-4bb2-a08a-315a37245fc3.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:58:20.000Z"
+    },
+    {
+      "content": "uuid\":\"3614a746-beb3-4750-a6a3-bbaa1e0d27f1",
+      "provenance": [
+        "local-data/inbox/qwen-6a85a0d4-b01a-4bb2-a08a-315a37245fc3.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:58:20.000Z"
+    },
+    {
+      "content": "parentUuid\":\"0961cb00-b8e2-41d6-bc3e-22b61868cefb...",
+      "provenance": [
+        "local-data/inbox/qwen-6a85a0d4-b01a-4bb2-a08a-315a37245fc3.jsonl"
+      ],
+      "first_seen": "2026-03-20T23:58:20.000Z"
+    }
+  ]
+}

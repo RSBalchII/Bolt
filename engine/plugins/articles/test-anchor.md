@@ -1,1 +1,0 @@
-Anchor Engine is a deterministic semantic memory system using the STAR algorithm. It runs on CPU with less than 1GB RAM and provides explainable AI memory.

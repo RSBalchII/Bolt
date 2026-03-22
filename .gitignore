@@ -1,75 +1,32 @@
-# Bolt Memory - Git Ignore
-
-# User Data & Database (NEVER commit these)
-local-data/
-engine/context_data/
-engine/context/
-backups/
-logs/
-*.log
-engine-startup.log
-engine-startup-*.log
-
-# Sensitive Configuration
-user_settings.json
-user_settings.*.json
-sovereign.yaml
-.env
-.env.*
-*.env
-orchestrator-config.json
-
-# Build Outputs
-dist/
-engine/dist/
-engine/dist-android/
-engine/dist-win/
+# Dependencies
 node_modules/
-packages/*/node_modules/
-integrations/*/dist/
-mcp-server/dist/
 
-# Temporary Files
-tmp/
-temp/
-*.tmp
-*.temp
-.cache/
-.qwen/
+# Build outputs
+dist/
 
-# Test Artifacts
-coverage/
-test-results/
-*.test.log
-test-github-ingest-*/
-test-physics-db-*/
+# Logs
+*.log
+logs/
 
-# IDE & Editor
+# Environment
+.env
+.env.local
+
+# IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Generated Documentation
-QWEN.md
+# Local data (user-generated)
+local-data/inbox/*.jsonl
+local-data/external-inbox/*.jsonl
+local-data/mirrored_brain/
+local-data/distilled/*.yaml
 
-# Checkpoint Files (optional - uncomment if you want to keep checkpoints)
-# local-data/distilled/
-
-# Database Files
-*.db
-*.db-journal
-*.sqlite
-*.sqlite-*
-
-# Model Files (too large for git)
-models/
-*.gguf
-*.bin
-*.pth
-
-# Android/Termux specific
-data/data/com.termux/
+# Keep directory structure
+!local-data/inbox/.gitkeep
+!local-data/external-inbox/.gitkeep
+!local-data/distilled/.gitkeep
