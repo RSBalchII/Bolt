@@ -21,7 +21,7 @@
   "author": "Robert Balch II",
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@rbalchii/anchor-engine": "^4.9.0"
+    "@rbalchii/anchor-engine": "^4.9.3"
   },
   "engines": {
     "node": ">=18.0.0"
