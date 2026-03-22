@@ -1,1 +1,38 @@
-../anchor-engine-node/user_settings.json
+{
+    "server": {
+        "host": "0.0.0.0",
+        "port": 3161,
+        "api_key": "bolt-memory-secret"
+    },
+    "llm": {
+        "provider": "remote",
+        "remote_url": "http://localhost:8000/v1",
+        "remote_model": "gemma-2-27b-it"
+    },
+    "search": {
+        "strategy": "hybrid",
+        "hide_years_in_tags": true,
+        "whitelist": ["qwen", "agent", "checkpoint", "distillation", "memory", "context", "decision", "bolt"],
+        "max_chars_default": 524288,
+        "max_chars_limit": 20000
+    },
+    "watcher": {
+        "debounce_ms": 2000,
+        "stability_threshold_ms": 2000,
+        "extra_paths": [
+            "/data/data/com.termux/files/home/.qwen/projects/-data-data-com-termux-files-home/chats"
+        ]
+    },
+    "mcp": {
+        "enabled": true,
+        "require_api_key": false,
+        "rate_limit_requests_per_minute": 120,
+        "max_query_results": 100,
+        "restrict_to_localhost": true
+    },
+    "agent_memory": {
+        "checkpoint_interval_messages": 50,
+        "auto_distill": true,
+        "distill_output_path": "./local-data/distilled/"
+    }
+}
